@@ -22,7 +22,7 @@
 ### Overview
 의존주입은 클라이언트의 의존성 생성을 행위로 부터 분리합니다. 이것은 프로그램이 loosely coupled 될 수 있고, dependency inversion 과 single responsibility principles 를 따를 수 있게 됩니다. service locator pattern 과는 완전히 반대로 클라이언트가 시스템이 어떤 의존성을 찾는지 알게 됩니다.
 
-기초적인 단위의 주입은 새로운 것이거나 특정한 메카니즘이 아닙니다. parameter passing 방식으로 모두 똑같이 작동합니다. 주입에서 paramter passing 은 클라이언트를 세부단계까지 관여할 필요가 없음을 말합니다.
+기초적인 단위의 주입은 새로운 것이거나 특정한 메카니즘이 아닙니다. parameter passing 방식으로 모두 똑같이 작동합니다. 주입에서 paramter passing 은 클라이언트가 세부단계까지 관여할 필요가 없음을 말합니다.
 
 
 
