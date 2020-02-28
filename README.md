@@ -51,8 +51,14 @@ injector 는 클라이언트에게 서비스를 소개한다. 또는 종종 클�
 ### Taxonomy
 Inversion of control(IoC) 는 DI 보다 일반적이다. 간단히 말해, IoC 는 당신이 코드를 호출 하는 것이 아닌, 코드가 당신을 호출하게끔 하는것이다. [template method pattern](http:// "객체지향 프로그래밍에서, template method 는 Design Patterns 책에서 나오는 행위설계패턴중 하나 입니다. template method 는 추상화된 superclass 에 있는 메소드입니다. template method 로써 같은 파일내에 추가적인 helper mothod들을 구현합니다. ") 이  DI 뺀 IoC 이다. polymorphism 은 상속을 통해 이루어진다. 
 
-[composition]( "컴퓨터이론에서 object composition 은 객체나 데이터타입을 더 복잡한 하나로 조합하는 방법을 말한다. 조합(Compositions)은 데이터구조와 다음의 공통적인 것들과 관련이 있습니다: union, set, sequence 그리고 다양한 graph구조. 객체지향에서 사용하는 객체들과 마찬가지로." ) 을 통해 IoC를 구현하는 의존성주입은 [strategy pattern]() 과 동일할 수 있지만 strategy pattern 은 객체의 생명주기를 통해 객체간 서로 주고받을 수 있는 의존성을 목표로합니다, 의존성주입은 의존성에 대해 오직 하나의 인스턴스만 갖습니다. delegation 과 composition 을 통해서지만 여전히 polymorphism 입니다.
+[composition](http:// "컴퓨터이론에서 object composition 은 객체나 데이터타입을 더 복잡한 하나로 조합하는 방식을 말한다. 조합(Compositions)은 데이터구조와 다음의 공통적인 것들과 관련이 있습니다: union, set, sequence 그리고 다양한 graph구조. 객체지향에서 사용하는 객체들과 마찬가지로." ) 을 통해 IoC를 구현하는 의존성주입은 [strategy pattern](http:// "컴퓨터프로그래밍에서, strategy pattern 은 행위에 관한 소프트웨어설계패턴 입니다, 런타임중에 알고리즘을 선택가능한. 하나의 알고리즘만을 사용하는 것이 아닌, 여러개의 알고리즘 중에 런타임중 사용할 알고리즘을 지시받아서 사용합니다.") 과 동일할 수 있지만 strategy pattern 은 객체의 생명주기를 통한 객체간 서로 주고받을 수 있는 의존성을 목표로합니다, 의존성주입은 의존성에 대해 오직 하나의 인스턴스만 갖습니다. delegation 과 composition 을 통해서지만 여전히 polymorphism 입니다.
 
+### Dependency injection frameworks
+CDI 와 같은 Application frameworks 그리고 그것의 구현들: Weld, Spring, Guice, Play framework, Salta, Glassfish HJ2, Dagger, 그리고 Managed Extensibility Framework(MEF) 는 의존성주입은 지원하지만 필수요소는 아닙니다.
+
+### Advantages
+* 의존성주입은 클라이언트가 설정가능한 여지를 줍니다. 오직 클라이언트의 행위만 고정입니다. 클라이언트가 원하는 인터페이스를 통해 어떠한 행위도 가능합니다
+* 의존성주입은 설정파일에 시스템설정을 넣어 다시 컴파일하는 일 없이 다시설정한 시스템설정이 반영되도록 할 수 있습니다. 분리된 설정은 다른 컴포넌트를 사용하는 상황에서도 쓰일 수 있습니다. 테스트도 포함해서요.
 
 
 
