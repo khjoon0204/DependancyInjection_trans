@@ -46,9 +46,12 @@ interfaces 는 클라이언트가 의존하는 타입이다. 클라이언트가 
 
 injector 는 클라이언트에게 서비스를 소개한다. 또는 종종 클라이언트를 만들기도 한다. injector 는 객체를 클라이언트화 하거나 나중에 다른 클라이언트를 위한 서비스로 다루면서 복잡한 객체간 관계를 가지기도 합니다. injector 는 클라이언트가 아닌 단지 서로 일하는 많은 객체들 일 수 있습니다. injector 는 다음과 같이 불리기도 합니다: assembler, provider, container, factory, builder, spring, construnction code 또는 main.
 
-의존성주입은 규칙이 될 수도 있다, 모든 객체의 생성과 행위를 분리토록 요구하는. 객체 생성을 수행하는 DI 프레임워크 따르면 new 키워드 사용을 금지하거나 또는 덜 엄격하게, 오직 [value objects](http:// "컴퓨터이론에서, value object 는 작은 객체이다, 동일여부는 같은 값을 가질 때이고 같은 객체이어야 함을 의미하지는 않는. ") 생성만 허락할 수 있다.
+의존성주입은 규칙이 될 수도 있다, 모든 객체의 생성과 행위를 분리토록 요구하는. 객체 생성을 수행하는 DI 프레임워크 따르면 new 키워드 사용을 금지하거나 또는 덜 엄격하게, 오직 [value objects](http:// "컴퓨터이론에서, value object 는 작은 객체이다, 동일여부는 같은 값을 가질 때이고, 같은 객체이어야 함을 의미하지는 않는. ") 생성만 허락할 수 있다.
 
+### Taxonomy
+Inversion of control(IoC) 는 DI 보다 일반적이다. 간단히 말해, IoC 는 당신이 코드를 호출 하는 것이 아닌, 코드가 당신을 호출하게끔 하는것이다. [template method pattern](http:// "객체지향 프로그래밍에서, template method 는 Design Patterns 책에서 나오는 행위설계패턴중 하나 입니다. template method 는 추상화된 superclass 에 있는 메소드입니다. template method 로써 같은 파일내에 추가적인 helper mothod들을 구현합니다. ") 이  DI 뺀 IoC 이다. polymorphism 은 상속을 통해 이루어진다. 
 
+[composition]( "컴퓨터이론에서 object composition 은 객체나 데이터타입을 더 복잡한 하나로 조합하는 방법을 말한다. 조합(Compositions)은 데이터구조와 다음의 공통적인 것들과 관련이 있습니다: union, set, sequence 그리고 다양한 graph구조. 객체지향에서 사용하는 객체들과 마찬가지로." ) 을 통해 IoC를 구현하는 의존성주입은 [strategy pattern]() 과 동일할 수 있지만 strategy pattern 은 객체의 생명주기를 통해 객체간 서로 주고받을 수 있는 의존성을 목표로합니다, 의존성주입은 의존성에 대해 오직 하나의 인스턴스만 갖습니다. delegation 과 composition 을 통해서지만 여전히 polymorphism 입니다.
 
 
 
