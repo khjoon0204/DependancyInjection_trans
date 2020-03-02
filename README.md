@@ -76,10 +76,55 @@ CDI 와 같은 Application frameworks 그리고 그것의 구현들: Weld, Sprin
 
 ## Structure
 ### UML class and sequence diagram
+![](https://github.com/khjoon0204/outerpark/blob/master/W3sDesign_Dependency_Injection_Design_Pattern_UML.jpg?raw=true)
+의존성주입 설계패턴 샘플 UML 클래스와 시퀀스 다이어그램
+
+위의 UML class diagram 에서, Client 클래스는 ServiceA 와 ServiceB 객체들을 필요로한다, ServiceA1, ServiceB1 클래스가 아니라, Injector 클래스는 객체들을 생성하고 Client에 주입한다. Client 를 객체생성으로 부터 분리한다.
+UML sequence diagram 은 실시한 상호작용들을 보여준다: Injector 객체는 ServiceA1 과 ServiceB1 객체들을 생성하고, 그 후에 Client 객체를 생성한다, 그리고 ServiceA1, ServiceB1 객체들을 주입한다.
+
+## Examples
+### Without dependency injection
+다음의 Java 예는, 클라이언트 클래스가 constructor 에 의해 초기화된 member variable 을 포함합니다. 클라이언트는 어떤 서비스를 사용하고 생성을 할지 제어합니다, 클라이언트는 서비스예시에서 하드코딩된 의존성을 가지고 있다고 말할 수 있습니다.
+~~~
+// 의존성주입 없는 예시
+public class Client {
+    // 클라이언트가 사용할 서비스에 대한 내부참조
+    private ExampleService service;
+
+    // 생성자
+    Client() {
+        // 의존성주입을 사용하는 대신 생성자에서 구현
+        service = new ExampleService();
+    }
+
+    // 서비스를 사용하는 클라이언트안에 메소드
+    public String greet() {
+        return "Hello " + service.getName();
+    }
+}
+~~~
+의존성주입은 멤버변수를 초기화하는 대안적 기술이다, 위에서 처럼 명백하게 서비스를 생성하는 것이 아닌. 우리는 이 예시를 다양한 기술을 이용하면서 아래에 설명할 것이다.
+
+### Types of dependency injection
+클라이언트 객체가 외부모듈에 대한 참조를 할 수 있는 방법은 적어도 세가지가 있다.
+constructor injection
+    클라이언트 생성자 클래스를 통해 의존성을 제공받는 방법
+setter injection
+    injector 가 의존성을 주입하는데에 사용하는 setter method 를 만드는 방법
+interface injection
+    인터페이스는 의존성을 어떤 클라이언트에게든 주입할 주입메소드를 제공합니다. 클라이언트들은 의존성에 접근하는 setter method 를 드러내는 인터페이스를 구현해야합니다.
+Other types
+DI 프레임워크는 위에 제시된 것들 외에 다른 주입 타입을 가질 수 있습니다.
+프레임웍스를 테스트할 때에는 다른 타입을 사용하기도 합니다. 현대의 테스트가능한 프레임웍스들은 클라이언트가 의존주입을 꼭 하지 않아도 됩니다, 그래서 레가시 코드도 테스트가능하게끔 만듭니다, 특히 자바언어에서는 리플렉션을 이용하여 테스트할 때나 할당으로 주입을 허용할 때 private 속성을 public 하게 만들 수 있습니다.
+역전주입에서는 의존성에 대한 완전한 삭제를 제공하지않습니다, 대신에 단순히 다른 의존의 형태로 교체합니다. 경험상, 만약 프로그래머가 클라이언트 코드만 볼 수 있고 무슨 프레임워크가 사용되고 있는지 말할 수 있다면, 클라이언트는 프레임워크의 하드코딩된 의존성을 가집니다.
+
+Constructor injection
+이 메소드는
 
 
 
 
+    
 
 
 
