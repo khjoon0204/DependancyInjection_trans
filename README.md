@@ -119,13 +119,63 @@ DI 프레임워크는 위에 제시된 것들 외에 다른 주입 타입을 가
 역전주입에서는 의존성에 대한 완전한 삭제를 제공하지않습니다, 대신에 단순히 다른 의존의 형태로 교체합니다. 경험상, 만약 프로그래머가 클라이언트 코드만 볼 수 있고 무슨 프레임워크가 사용되고 있는지 말할 수 있다면, 클라이언트는 프레임워크의 하드코딩된 의존성을 가집니다.
 
 Constructor injection
-이 메소드는
+이 메소드는 클라이언트가 constructor 에 파라메터를 제공합니다
+~~~
+// Constructor
+Client(Service service) {
+    // 클라이언트 안에 들어온 서비스에 대한 참조를 저장한다
+    this.service = service;
+}
+~~~
 
+Setter injection 
+이 메소드는 클라이언트가 setter method 를 제공합니다
+~~~
+// Setter method
+public void setService(Service service) {
+    // 클라이언트 안에 들어온 서비스에 대한 참조를 저장한다
+    this.service = service;
+}
+~~~
 
+Interface injection 
+클라이언트는 단순히 클라이언트 종속성에 대한 setter메소드와의 인터페이스를 공개합니다. 의존성 주입이 있을 때 injector 가 클라이언트와 대화하는 방식입니다
+~~~
+// Service setter interface.
+public interface ServiceSetter {
+    public void setService(Service service);
+}
 
+// Client class
+public class Client implements ServiceSetter {
+    // 클라이언트가 사용하는 서비스에 대한 내부참조
+    private Service service;
 
-    
+    // 클라이언트가 사용하기 위해 service를 set
+    @Override
+    public void setService(Service service) {
+        this.service = service;
+    }
+}
+~~~
 
+Constructor injection comparison
+모든 종속성을 처음에 생성하는것을 선호합니다, 클라이언트객체는 언제나 유효한 상태임을 확신할 수 있기 때문입니다, 어떤 의존성참조는 null 을 가지고 있는것과는 달리. 그러나 이 방법대로면, 나중에 의존성이 바뀌는 것에 대해 대처하지 못합니다. 때문에 클라이언트를 바꿀 수 없게, 그리고 thread safe 하게 만들어야 합니다.
+~~~
+// Constructor
+Client(Service service, Service otherService) {
+    if (service == null) {
+        throw new InvalidParameterException("service must not be null");
+    }
+    if (otherService == null) {
+        throw new InvalidParameterException("otherService must not be null");
+    }
+
+    // Save the service references inside this client
+    this.service = service;
+    this.otherService = otherService;
+}
+~~~
 
 
 
