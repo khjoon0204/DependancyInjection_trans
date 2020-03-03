@@ -171,11 +171,139 @@ Client(Service service, Service otherService) {
         throw new InvalidParameterException("otherService must not be null");
     }
 
-    // Save the service references inside this client
+    // 클라이언트 안에 서비스참조들을 저장한다
     this.service = service;
     this.otherService = otherService;
 }
 ~~~
+
+Setter injection comparison
+클라이언트는 각각의 종속성에 대한 setter메소드를 제공해야만 합니다. 이것은 언제든 종속성참조들의 상태값을 바꿀 수 있는 자유를 줍니다. 그러나 만약 주입된 의존성이 하나 이상이면 클라이언트는 모든 종속성이 사용하기 전에 주입이 됐는지 확신하기 어렵습니다.
+~~~
+// 클라이언트가 사용할 service 를 set
+public void setService(Service service) {
+    if (service == null) {
+        throw new InvalidParameterException("service must not be null");
+    }
+    this.service = service;
+}
+
+// 클라이언트가 사용할 다른 서비스를 set
+public void setOtherService(Service otherService) {
+    if (otherService == null) {
+        throw new InvalidParameterException("otherService must not be null");
+    }
+    this.otherService = otherService;
+}
+~~~
+
+이 주입들은 어디에도 의존없이 일어나기 때문에 주입이 끝났음을 클라이언트에게 알릴 방법이 없습니다. 종속성에 대한 setter 호출이 실패할 때 종속성은 그냥 null 로 남아있을 수 있습니다. 클라이언트는 종속성을 사용할 때 주입이 끝난건지 확인해야 합니다. 
+~~~
+// Set the service to be used by this client
+public void setService(Service service) {
+    this.service = service;
+}
+
+// Set the other service to be used by this client
+public void setOtherService(Service otherService) {
+    this.otherService = otherService;
+}
+
+// Check the service references of this client
+private void validateState() {
+    if (service == null) {
+        throw new IllegalStateException("service must not be null");
+    }
+    if (otherService == null) {
+        throw new IllegalStateException("otherService must not be null");
+    }
+}
+
+// Method that uses the service references
+public void doSomething() {
+    validateState();
+    service.doYourThing();
+    otherService.doYourThing();
+}
+~~~
+
+Interface injection comparison
+
+인터페이스주입의 장점은 종속성은 무시할 수 있지만 여전히 새 클라이언트에 대한 참조는 가지고 있어, 그것을 이용해 자기-참조로 클라이언트에게 보냅니다. 종속성은 injector가 됩니다. 주입 메소드(단지 setter method 일 수도 있다)는 인터페이스를 이용하는것이 키포인트입니다.
+클라이언트와 클라이언트의 종속성을 소개하기 위해 조립자가 여전히 필요합니다. 조립자는 클라이언트에 대한 참조를 가질 것이고, 종속성을 set 하기위해 setter인터페이스로 변환할 것입니다. 그리고 종속객체에 setter인터페이스를 넘기고 돌아서 다시 자기-참조로 클라이언트에게 넘깁니다. 
+인터페이스 주입이 값을 갖기 위해서는 종속성은 자기에게 참조를 넘기는 추가작업이 있어야 합니다. 이것은 다른 의존성을 해결하기 위해 factory 나 부가적인 조립자처럼 보일 수 있습니다, 몇몇 세부구현사항들을 메인조립자로부터 추상화하면서.
+~~~
+// Service setter interface.
+public interface ServiceSetter {
+    public void setService(Service service);
+}
+
+// Client class
+public class Client implements ServiceSetter {
+    // Internal reference to the service used by this client.
+    private Service service;
+
+    // Set the service that this client is to use.
+    @Override
+    public void setService(Service service) {
+        this.service = service;
+    }
+}
+
+// Injector class
+public class ServiceInjector {
+	Set<ServiceSetter> clients;
+	public void inject(ServiceSetter client) {
+		clients.add(client);
+		client.setService(new ServiceFoo());
+	}
+	public void switchToBar() {
+		for (Client client : clients) {
+			client.setService(new ServiceBar());
+		}
+	}
+}
+
+// Service classes
+public class ServiceFoo implements Service {}
+public class ServiceBar implements Service {}
+
+~~~
+
+Assembling examples
+수동으로 메인에서 의존성을 조립하는 것도 의존주입의 한가지 방식입니다.
+~~~
+public class Injector {
+    public static void main(String[] args) {
+        // Build the dependencies first
+        Service service = new ExampleService();
+
+        // Inject the service, constructor style
+        Client client = new Client(service);
+
+        // Use the objects
+        System.out.println(client.greet());
+    }	
+}
+~~~
+위의 예제는 객체를 수동으로 생성하고, 바로 작동을 시작합니다. 알아야할 점은 이 injector 는 순수하지않습니다. 이 injector 는 생성한 객체를 사용하고있습니다. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
