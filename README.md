@@ -286,9 +286,43 @@ public class Injector {
     }	
 }
 ~~~
-위의 예제는 객체를 수동으로 생성하고, 바로 작동을 시작합니다. 알아야할 점은 이 injector 는 순수하지않습니다. 이 injector 는 생성한 객체를 사용하고있습니다. 
+위의 예제는 객체를 수동으로 생성하고, 바로 작동을 시작합니다. 알아야할 점은 이 injector 는 순수하지않습니다. 이 injector 는 생성한 객체를 사용하고있습니다. injector 는 ExampleService 를 생성만 해야하지만 생성하고 클라이언트가 사용했다. 이렇게 사용되지 말아야 하지만 여기서는 사용할 수 밖에 없다. 객체 지향 소프트웨어가 시작하기 위해 main ()과 같은 객체 지향이 아닌 정적 메소드가 필요한 것처럼, 의존성 주입 객체 그래프는 모든 것을 시작하기 위해 적어도 하나 (바람직하게는 단 하나의) 진입 점이 필요합니다.
+main 메소드에서 수동적인 생성은 이렇게 직접적이지 않고, builders, factories, 또는 다른 construction patterns 를 포함할 수 있습니다. 이것이 보다 낫고 추상적일 수 있습니다. 객체생성하는 코드가 더이상 어플리케이션에 따라 변하지 않는 대신 전역적으로 사용하는 시점에서 수동의존주입은 framework의존주입으로 연결됩니다.
+Spring 과 같은 프레임웍스들은 이러한 객체들을 생성할 수 있고, 클라이언트에게 참조를 돌려보내기 전에 다같이 연결해 놓습니다. 구체적인 ExampleService 에 대한 사항은 코드에서 설정 데이터 파일로 옮겨집니다.
+~~~
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+public class Injector {
+	public static void main(String[] args) {
+		// -- 객체들을 조립 -- //
+		BeanFactory beanfactory = new ClassPathXmlApplicationContext("Beans.xml");
+		Client client = (Client) beanfactory.getBean("client");
 
+		// -- 객체 사용 -- //
+		System.out.println(client.greet());
+	}
+}
+~~~
+
+Spring 과 같은 프레임웍스는 설정파일에 조립상세를 드러나게 합니다. 위의 코드는 객체들을 생성하고 Beans.xml 에 따라 서로를 묶습니다. ExampleService 생성은 아래 밑줄에 언급될 뿐입니다. 길고 복잡한 객체 그래프는 이런 방식으로 정의될 수 있고 오직 코드상에 언급된 클래스만 시작지점메소드를 갖습니다, 이 경우 greet() 입니다.
+~~~
+<?xml version="1.0" encoding="UTF-8"?>
+ <beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="service" class="ExampleService">
+    </bean>
+
+    <bean id="client" class="Client">
+        <constructor-arg value="service" />        
+    </bean>
+</beans>
+~~~
+위의 예시의 경우 클라이언트와 서비스는 스프링에서 주는 어떤 변화도 겪지 않았습니다. 단순한 POJOs 를 유지할 수 있습니다. 이것이 스프링이 그것들의 존재여부는 완전히 신경쓰지않고 서비스와 클라이언트를 연결하는 방법입니다. 만약 클래스에 annotations 이 추가된다면 다를 수 있습니다. 특정한 annotation들과 호출들이 여러 클래스로 퍼지는 것을 관리함으로써만 시스템은 스프링과 느슨한 의존관계를 유지합니다. 시스템이 스프링을 오래 사용하려고 한다면 이것은 중요합니다.
 
 
 
