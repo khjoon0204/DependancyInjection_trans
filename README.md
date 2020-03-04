@@ -323,10 +323,44 @@ Spring 과 같은 프레임웍스는 설정파일에 조립상세를 드러나�
 </beans>
 ~~~
 위의 예시의 경우 클라이언트와 서비스는 스프링에서 주는 어떤 변화도 겪지 않았습니다. 단순한 [POJOs](http:// "소프트웨어공학에서, plain old Java object(POJO)는 보통의 자바객체 이다, 특별히 어떤 제한이 없고 어떠한 class path가 필요하지 않은. 이 용어는 2000 년 9 월 Martin Fowler, Rebecca Parsons 및 Josh MacKenzie에 의해 만들어졌습니다: '왜 사람들은 그들의 시스템에서 일반적으로 사용하는 객체들에 반대하는지 궁금했고 심플 객체에 멋진 이름이 결여됐다고 결론지었습니다, 그래서 이름을 붙였고, 잘 지은 것 같습니다.'") 를 유지할 수 있습니다. 이것이 스프링이 그것들의 존재여부는 완전히 신경쓰지않고 서비스와 클라이언트를 연결하는 방법입니다. 만약 클래스에 annotations 이 추가된다면 다를 수 있습니다. 특정한 annotation들과 호출들이 여러 클래스로 퍼지는 것을 관리함으로써만 시스템은 스프링과 느슨한 의존관계를 유지합니다. 시스템이 스프링을 오래 사용하려고 한다면 이것은 중요합니다.
+단순히 POJOs 를 선택하는것은 비용없이 유지되지 않습니다. 복잡한 구성파일들을 만들고 유지하는데 들이는 노력보다 단순히 클래스에 annotations를 표시하고 spring이 나머지 일을하게 할 수 있습니다. 이름 또는 타입과 매칭하는 convention을 따른다면 의존성문제는 간단히 해결될 수 있습니다. [convention over configuration](http:// "Convention over configuration 은 프레임웍스를 이용한 소프트웨어 디자인 페러다임 입니다, 프레임워크가 기능하도록하고 개발자가 결정하는 수를 줄이려는. 개념은 David Heinemeier Hansson 이 Ruby on Rails 웹프레임워크의 철학을 설명하기 위해 소개됐지만 'sensible defaults' 같은 초기 아이디어와 유저 인터페이스 디자인에서 principle of least astonishment 와 관련이 있습니다.  ") 을 선택한다면, 어떤 다른 프레임워크를 리펙토링할 때, 프레임워크 특정 annotations를 삭제하는 것은 크게 문제가 안되고 많은 주입 annotations 가 이제는 표준화 되었습니다.
+~~~
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+public class Injector {
+	public static void main(String[] args) {
+		// Assemble the objects
+		BeanFactory beanfactory = new AnnotationConfigApplicationContext(MyConfiguration.class);
+		Client client = beanfactory.getBean(Client.class);
 
+		// Use the objects
+		System.out.println(client.greet());
+	}
+}
+~~~
+~~~
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
-
+@ComponentScan
+public class MyConfiguration {
+    @Bean
+    public Client client(ExampleService service) {
+        return new Client(service);
+    }
+}
+~~~
+~~~
+@Component
+public class ExampleService {
+    public String getName() {
+        return "World!";
+    }
+}
+~~~
 
 
 
