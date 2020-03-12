@@ -5,3 +5,7 @@ Dependency Injection is Loose Coupling by Mark Seemann 번역 [Wiki](https://git
 
 
 [번역중]Inversion of Control Containers and the Dependency Injection pattern 번역 [Wiki]()
+[원문링크](https://www.martinfowler.com/articles/injection.html)
+
+
+Software design pattern 번역[Wiki](Software-design-pattern )
