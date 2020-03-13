@@ -8,4 +8,4 @@ Dependency Injection is Loose Coupling by Mark Seemann 번역 [Wiki](https://git
 [원문링크](https://www.martinfowler.com/articles/injection.html)
 
 
-[번역중]Software design pattern 번역[Wiki]()
+[번역중]Software design pattern 번역[Wiki](https://github.com/khjoon0204/DependancyInjection_trans/wiki/Software-design-pattern-%EB%B2%88%EC%97%AD)
